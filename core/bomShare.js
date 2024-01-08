@@ -1,6 +1,7 @@
 import axios from 'axios';
 import inquirer from 'inquirer';
 
+// dont forget to insert refer when you recode this lmao
 const like = async (sessionid) => {
   try {
     const r = await axios.post(
