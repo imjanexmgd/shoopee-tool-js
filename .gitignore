@@ -1,4 +1,5 @@
 src/core/boost/liker.template.sh
+src/session/cookies.txt
 /node_modules
 addFavorite.js
 cekis.js
