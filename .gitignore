@@ -1,2 +1,4 @@
-/core/liker.template.sh
+src/core/boost/liker.template.sh
 /node_modules
+addFavorite.js
+cekis.js
