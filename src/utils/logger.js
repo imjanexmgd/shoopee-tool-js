@@ -11,7 +11,7 @@ export const loggerSuccess = (msg) => {
       })
     );
     const formattedMsg = chalk.green(msg);
-    console.log(`! [${timeString}] : ${formattedMsg}`);
+    console.log(`[${timeString}] : ${formattedMsg}`);
   } catch (error) {
     console.log(error + 'failed logger success');
   }
@@ -28,7 +28,7 @@ export const loggerFailed = (msg) => {
       })
     );
     const formattedMsg = chalk.red(msg);
-    console.log(`! [${timeString}] : ${formattedMsg}`);
+    console.log(`[${timeString}] : ${formattedMsg}`);
   } catch (error) {
     console.log(error + 'failed logger');
   }
@@ -45,7 +45,7 @@ export const loggerInfo = (msg) => {
       })
     );
     const formattedMsg = chalk.magenta(msg);
-    console.log(`! [${timeString}] : ${formattedMsg}`);
+    console.log(`[${timeString}] : ${formattedMsg}`);
   } catch (error) {
     console.log(error + 'failed logger');
   }

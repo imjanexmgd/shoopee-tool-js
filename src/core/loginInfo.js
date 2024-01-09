@@ -7,12 +7,12 @@ const loginInfo = async () => {
     const url = 'https://shopee.co.id/api/v4/account/get_profile';
     const r = await shoopeClient.get(url);
     if (r.data.data == null) {
-      loggerFailed('Invalid credentials please use get cookie again');
-      return;
+      throw new Error('Invalid credentials please use get cookie again');
     }
     loggerSuccess(`Login as Username: ${r.data.data.user_profile.username}`);
+    return;
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 };
 export default loginInfo;
