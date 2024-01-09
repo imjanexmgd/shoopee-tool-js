@@ -10,6 +10,7 @@ const loginInfo = async () => {
       throw new Error('Invalid credentials please use get cookie again');
     }
     loggerSuccess(`Login as Username: ${r.data.data.user_profile.username}`);
+    console.log();
     return;
   } catch (error) {
     throw error;

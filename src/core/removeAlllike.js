@@ -80,7 +80,6 @@ const BatchUnLike = async () => {
     terminalClear();
 
     await loginInfo();
-    console.log();
     const { isFilterComm } = await inquirer.prompt({
       name: 'isFilterComm',
       type: 'confirm',
