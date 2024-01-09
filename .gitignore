@@ -3,3 +3,4 @@ src/session/cookies.txt
 /node_modules
 addFavorite.js
 cekis.js
+.env

@@ -68,25 +68,16 @@ const getCookie = async () => {
             const parsedCookies = cookies
               .map((cookie) => cookie.split(';')[0])
               .join('; ');
-            const folderpath = path.join(process.cwd(), 'src', 'session');
-            if (!fs.existsSync(folderpath)) {
-              loggerInfo('Creating folder for session');
-              fs.mkdirSync(folderpath);
-            }
-            const filePath = path.join(
-              process.cwd(),
-              'src',
-              'session',
-              'cookies.txt'
-            );
-            fs.writeFile(filePath, parsedCookies, (error) => {
+            const data = `SHOPEE_COOKIES='${parsedCookies}'`;
+            const filePath = path.join(process.cwd(), '.env');
+            fs.writeFile(filePath, data, (error) => {
               if (error) {
                 loggerFailed('Failed when saved cookies');
               } else {
-                loggerSuccess('Success saved cookies to cookies.txt');
+                loggerSuccess('Success saved cookies to env');
               }
             });
-            console.log('Task success');
+            loggerSuccess('Task success');
             return;
           }
           return;
