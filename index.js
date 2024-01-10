@@ -6,6 +6,7 @@ import getCookie from './src/core/getCookie.js';
 import BatchLike from './src/core/addFavorite.js';
 import BatchUnLike from './src/core/removeAlllike.js';
 import { loggerFailed, loggerInfo, loggerSuccess } from './src/utils/logger.js';
+import getLivechat from './src/core/liveTools/getLiveChat.js';
 
 (async () => {
   try {
@@ -18,6 +19,7 @@ import { loggerFailed, loggerInfo, loggerSuccess } from './src/utils/logger.js';
     );
     const choices = [
       'get cookie',
+      'monitor live chat',
       'add favorite',
       'batch unlike',
       'bom share',
@@ -37,6 +39,7 @@ import { loggerFailed, loggerInfo, loggerSuccess } from './src/utils/logger.js';
     else if (choice === 'get cookie') await getCookie();
     else if (choice === 'add favorite') await BatchLike();
     else if (choice === 'batch unlike') await BatchUnLike();
+    else if (choice === 'monitor live chat') await getLivechat();
     else loggerInfo('to run bom like see readme.md');
     loggerSuccess(`${appName} task success`);
   } catch (error) {
