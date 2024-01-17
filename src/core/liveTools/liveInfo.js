@@ -1,8 +1,9 @@
-import axios from 'axios';
 import androidClient from '../../session/androidClient.js';
+import { loggerFailed, loggerInfo, loggerSuccess } from '../../utils/logger.js';
 
 const liveInfo = async (sessionid) => {
   try {
+    loggerInfo(` starting get info live session ${sessionid}`);
     const url = `https://live.shopee.co.id/api/v1/session/${sessionid}/joinv2`;
     const response = await androidClient.post(url, {
       uuid: '153d8ff43df54cf597918a8ae2d5e542=',
@@ -25,6 +26,7 @@ const liveInfo = async (sessionid) => {
         chatroom_id,
       } = response.data.data.session;
       // console.log(response.data);
+      loggerSuccess(`success get live session ${session_id} info`);
       data = {
         success: true,
         session_id,
@@ -37,6 +39,7 @@ const liveInfo = async (sessionid) => {
         share_url: response.data.data.share_url,
       };
     } else {
+      loggerFailed(`failed to get live session info ${sessionid}`);
       throw {
         err_code: response.data.err_code,
         success: false,

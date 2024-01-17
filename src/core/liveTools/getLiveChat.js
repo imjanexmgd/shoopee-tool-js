@@ -62,10 +62,12 @@ const getLivechat = async () => {
       type: 'input',
       message: 'Insert your live session',
     });
-    const LiveSession = await liveInfo(sessionid);
+
     let timestamp = Math.floor(Date.now() / 1000 - 2 * 3600);
-    if (LiveSession.success === true) {
-      while (true) {
+
+    while (true) {
+      const LiveSession = await liveInfo(sessionid);
+      if (LiveSession.success === true) {
         const SPIM_ID = LiveSession.chatroom_id;
         const searchParams = new URLSearchParams({
           uuid: '153d8ff43df54cf597918a8ae2d5e542=',
@@ -94,7 +96,7 @@ const getLivechat = async () => {
             if (doFilter.isWarnMessage == true) {
               // do ban user
               loggerFailed('its contained warn message');
-              await BanUser(sessionid, userid, true);
+              // await BanUser(sessionid, userid, true);
             } else {
               loggerSuccess('not contained warn message');
               console.log();
@@ -107,8 +109,12 @@ const getLivechat = async () => {
           loggerFailed('Live session has ended');
           break;
         }
-        await delay(3000);
+        await delay(2500);
         console.log();
+      } else {
+        loggerFailed('failed to get live session info');
+        loggerFailed(LiveSession.message);
+        break;
       }
     }
   } catch (error) {
@@ -116,5 +122,5 @@ const getLivechat = async () => {
     return;
   }
 };
-
+// 2.05 t@r.RK 04/23 FHi:/ 熊出没永不be，他还要陪我们下个十年，下下个十年！ # 电影熊出没逆转时空# 看光头强十年回忆杀泪目了  https://v.douyin.com/iLMgJ3mu/ 复制此链接，打开Dou音搜索，直接观看视频！
 export default getLivechat;
