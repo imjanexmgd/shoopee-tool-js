@@ -45,7 +45,7 @@ const bomShare = async () => {
     for (let index = 1; index <= count; index++) {
       try {
         await share(sessionid);
-        loggerSuccess(`success share ${sessionid} || ${i}/${count}`);
+        loggerSuccess(`success share ${sessionid} || ${index}/${count}`);
       } catch (error) {
         loggerFailed(`failed to share`);
         break;

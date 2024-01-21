@@ -36,8 +36,11 @@ const bomLike = async () => {
     for (let index = 1; index <= count; index++) {
       try {
         await like(sessionid, 50);
-        loggerSuccess(`Success send 50 like to ${sessionid} || ${i}/${count}`);
+        loggerSuccess(
+          `Success send 50 like to ${sessionid} || ${index}/${count}`
+        );
       } catch (error) {
+        console.log(error);
         loggerFailed('Failed send like');
         break;
       }
