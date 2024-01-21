@@ -3,7 +3,7 @@ import { loggerFailed, loggerInfo, loggerSuccess } from '../../utils/logger.js';
 
 const liveInfo = async (sessionid) => {
   try {
-    loggerInfo(` starting get info live session ${sessionid}`);
+    loggerInfo(`starting get info live session ${sessionid}`);
     const url = `https://live.shopee.co.id/api/v1/session/${sessionid}/joinv2`;
     const response = await androidClient.post(url, {
       uuid: '153d8ff43df54cf597918a8ae2d5e542=',

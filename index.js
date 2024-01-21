@@ -7,6 +7,7 @@ import BatchLike from './src/core/addFavorite.js';
 import BatchUnLike from './src/core/removeAlllike.js';
 import { loggerFailed, loggerInfo, loggerSuccess } from './src/utils/logger.js';
 import getLivechat from './src/core/liveTools/getLiveChat.js';
+import bomLike from './src/core/boost/bomLike.js';
 
 (async () => {
   try {
@@ -15,7 +16,7 @@ import getLivechat from './src/core/liveTools/getLiveChat.js';
     const jsonData = JSON.parse(json);
     const appName = jsonData.name;
     console.log(
-      `${appName}\nmade with ❤️ by janexmgd\nhttps://github.com/imjanexmgd/shoopee-tool-js\n\n`
+      `${appName}\nmade with ❤️ by janexmgd\nhttps://github.com/imjanexmgd/shoopee-tool-js\ndont forget to star the repo\n`
     );
     const choices = [
       'get cookie',
@@ -40,6 +41,7 @@ import getLivechat from './src/core/liveTools/getLiveChat.js';
     else if (choice === 'add favorite') await BatchLike();
     else if (choice === 'batch unlike') await BatchUnLike();
     else if (choice === 'monitor live chat') await getLivechat();
+    else if (choice === 'bom like') await bomLike();
     else loggerInfo('to run bom like see readme.md');
     loggerSuccess(`${appName} task success`);
   } catch (error) {

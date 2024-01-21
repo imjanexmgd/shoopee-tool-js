@@ -4,12 +4,23 @@ import { loggerFailed, loggerInfo, loggerSuccess } from '../utils/logger.js';
 import terminalClear from '../utils/terminalClear.js';
 import fs from 'fs';
 import path from 'path';
+import inquirer from 'inquirer';
 
 // source from https://github.com/Lo9ic/GetCookieShopee/blob/main/index.js
 axios.defaults.headers.common['User-Agent'] =
   'Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0';
 const getCookie = async () => {
   try {
+    console.log('Lve client for set ur live client');
+    console.log('Spm client for set ur spammer client (for bom like)');
+    const choices = ['Lve client', 'Spm client'];
+    const ask = await inquirer.prompt({
+      type: 'list',
+      message: 'do you want set cookie for ?',
+      name: 'clientType',
+      choices: choices,
+    });
+    const { clientType } = ask;
     let attempts = 0;
     const maxAttempts = 3;
 
@@ -68,13 +79,19 @@ const getCookie = async () => {
             const parsedCookies = cookies
               .map((cookie) => cookie.split(';')[0])
               .join('; ');
-            const data = `SHOPEE_COOKIES='${parsedCookies}'`;
-            const filePath = path.join(process.cwd(), '.env');
+            const data = `${parsedCookies}`;
+            let filename;
+            if (clientType == 'Lve client') {
+              filename = 'Lveclient.cookie.txt';
+            } else if (clientType == 'Spm client') {
+              filename = 'Spmclient.cookie.txt';
+            }
+            const filePath = path.join(process.cwd(), 'cookie', filename);
             fs.writeFile(filePath, data, (error) => {
               if (error) {
                 loggerFailed('Failed when saved cookies');
               } else {
-                loggerSuccess('Success saved cookies to env');
+                loggerSuccess('Success saved cookies to ' + filename);
               }
             });
             loggerSuccess('Task success');

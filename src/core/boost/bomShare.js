@@ -1,8 +1,9 @@
 import axios from 'axios';
 import inquirer from 'inquirer';
+import { loggerFailed, loggerSuccess } from '../../utils/logger.js';
 
 // dont forget to insert refer when you recode this lmao
-const like = async (sessionid) => {
+const share = async (sessionid) => {
   try {
     const r = await axios.post(
       `https://live.shopee.co.id/api/v1/session/${sessionid}/msg/share`,
@@ -41,9 +42,14 @@ const bomShare = async () => {
     ]);
     const { count, sessionid } = answers;
     console.clear();
-    for (let index = 0; index < count; index++) {
-      const req = await like(sessionid);
-      console.log(`${index} ${JSON.stringify(req)}`);
+    for (let index = 1; index <= count; index++) {
+      try {
+        await share(sessionid);
+        loggerSuccess(`success share ${sessionid} || ${i}/${count}`);
+      } catch (error) {
+        loggerFailed(`failed to share`);
+        break;
+      }
     }
     return;
   } catch (error) {

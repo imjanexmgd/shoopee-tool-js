@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const androidClient = axios.create({
   headers: {
-    'User-Agent': 'okhttp/3.12.4 app_type=1 Denny ganteng',
+    'User-Agent': 'okhttp/3.12.4 app_type=1',
     'Accept-Encoding': 'gzip',
     'Content-Type': 'application/json',
     shopee_http_dns_mode: '1',

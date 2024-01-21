@@ -1,5 +1,5 @@
 import inquirer from 'inquirer';
-import shoopeClient from '../session/shoopeClient.js';
+import shopeeLveClient from '../session/shopeeLveClient.js';
 import loginInfo from './loginInfo.js';
 import { loggerFailed, loggerInfo, loggerSuccess } from '../utils/logger.js';
 import terminalClear from '../utils/terminalClear.js';
@@ -16,13 +16,13 @@ const unlikeProduct = async (item) => {
         },
       ],
     };
-    const req = await shoopeClient.post(url, data);
+    const req = await shopeeLveClient.post(url, data);
     if (req.data.error == 0) {
       loggerSuccess(`Success unlike ${name}`);
     } else {
       loggerFailed(`Already unlike ${name}`);
     }
-    await delay(1500);
+    await delay(150);
     return;
   } catch (error) {
     console.log(`error when like product :${error.message}`);
@@ -37,11 +37,12 @@ const getMyLikes = async () => {
     while (true) {
       const params = new URLSearchParams({
         offset: String(offset),
-        limit: '20',
+        limit: '50',
+        kw: '',
       });
-      const url = `https://live.shopee.co.id/webapi/v1/item/my_likes?${params}`;
+      const url = `https://live.shopee.co.id/api/v1/item/liked?${params}`;
       loggerInfo(`Fetching data at ${offset} offset`);
-      const r = await shoopeClient.get(url);
+      const r = await shopeeLveClient.get(url);
       if (r.data.err_code != 0) {
         loggerFailed('Failed when fetch liked product');
         break;
@@ -65,7 +66,7 @@ const getMyLikes = async () => {
         break;
       }
       offset = r.data?.data?.next_offset;
-      await delay(1500);
+      await delay(150);
     }
 
     loggerSuccess('success get all product liked');
@@ -79,7 +80,7 @@ const BatchUnLike = async () => {
   try {
     terminalClear();
 
-    await loginInfo();
+    await loginInfo('lve');
     const { isFilterComm } = await inquirer.prompt({
       name: 'isFilterComm',
       type: 'confirm',

@@ -1,5 +1,5 @@
 import inquirer from 'inquirer';
-import shoopeClient from '../session/shoopeClient.js';
+import shopeeLveClient from '../session/shopeeLveClient.js';
 import { loggerFailed, loggerInfo, loggerSuccess } from '../utils/logger.js';
 import terminalClear from '../utils/terminalClear.js';
 import loginInfo from './loginInfo.js';
@@ -24,7 +24,7 @@ const searchProduct = async (keyword) => {
       });
 
       const url = `https://affiliate.shopee.co.id/api/v3/offer/product/list?${params}`;
-      const a = await shoopeClient.get(url);
+      const a = await shopeeLveClient.get(url);
       if (a.data.data.list.length == 0) {
         loggerInfo('No product at list,search product will stop');
         break;
@@ -41,11 +41,7 @@ const searchProduct = async (keyword) => {
         datas.push(product);
       });
       loggerSuccess(`Total current product : ${datas.length}`);
-      await delay(2000);
-
-      await new Promise((resolve) => {
-        setTimeout(resolve, 3000);
-      });
+      await delay(100);
     }
     loggerSuccess(`Total data obtained : ${datas.length}`);
     loggerSuccess(`Task will stop`);
@@ -66,16 +62,13 @@ const likeProduct = async ({ name, itemid, shopid }) => {
         },
       ],
     };
-    const req = await shoopeClient.post(url, data);
+    const req = await shopeeLveClient.post(url, data);
     if (req.data.error == 0) {
       loggerSuccess(`Success like ${name}`);
     } else {
       loggerFailed(`Already like ${name}`);
     }
-    loggerInfo(`Task success wait sleep 2000ms`);
-    await new Promise((resolve) => {
-      setTimeout(resolve, 2000);
-    });
+    await delay(150);
     return;
   } catch (error) {
     console.log(`error when like product :${error.message}`);
@@ -84,7 +77,7 @@ const likeProduct = async ({ name, itemid, shopid }) => {
 const BatchLike = async () => {
   try {
     terminalClear();
-    await loginInfo();
+    await loginInfo('lve');
     const r = await inquirer.prompt({
       name: 'keyword',
       type: 'input',

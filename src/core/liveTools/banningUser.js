@@ -1,4 +1,4 @@
-import shoopeClient from '../../session/shoopeClient.js';
+import shopeeLveClient from '../../session/shopeeLveClient.js';
 import { loggerSuccess } from '../../utils/logger.js';
 
 const BanUser = async (sessionid, uid, isBan) => {

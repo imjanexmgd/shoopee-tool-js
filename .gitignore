@@ -1,9 +1,5 @@
-src/core/boost/liker.template.sh
-src/session/cookies.txt
+cookie/Spmclient.cookie.txt
+cookie/Lveclient.cookie.txt
 /node_modules
-testCookie.js
 flowLive.txt
-/tmp
-stream.sh
 url.txt
-.env
