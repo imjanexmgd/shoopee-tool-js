@@ -3,11 +3,12 @@ import bomShare from './src/core/boost/bomShare.js';
 import { readFile } from 'fs/promises';
 import terminalClear from './src/utils/terminalClear.js';
 import getCookie from './src/core/getCookie.js';
-import BatchLike from './src/core/addFavorite.js';
-import BatchUnLike from './src/core/removeAlllike.js';
+import BatchLike from './src/core/favorite/addFavorite.js';
+import BatchUnLike from './src/core/favorite/removeAlllike.js';
 import { loggerFailed, loggerInfo, loggerSuccess } from './src/utils/logger.js';
 import getLivechat from './src/core/liveTools/getLiveChat.js';
 import bomLike from './src/core/boost/bomLike.js';
+import addFavoritebyList from './src/core/favorite/addFavByList.js';
 
 (async () => {
   try {
@@ -20,11 +21,13 @@ import bomLike from './src/core/boost/bomLike.js';
     );
     const choices = [
       'get cookie',
-      'monitor live chat',
+
       'add favorite',
+      'add favorite by list',
       'batch unlike',
-      'bom share',
-      'bom like',
+      'spam like live',
+      'spam share live',
+      'monitor live chat',
     ];
 
     const answers = await inquirer.prompt([
@@ -36,12 +39,13 @@ import bomLike from './src/core/boost/bomLike.js';
       },
     ]);
     const { choice } = answers;
-    if (choice === 'bom share') await bomShare();
+    if (choice === 'spam share live') await bomShare();
     else if (choice === 'get cookie') await getCookie();
     else if (choice === 'add favorite') await BatchLike();
+    else if (choice === 'add favorite by list') await addFavoritebyList();
     else if (choice === 'batch unlike') await BatchUnLike();
     else if (choice === 'monitor live chat') await getLivechat();
-    else if (choice === 'bom like') await bomLike();
+    else if (choice === 'spam like live') await bomLike();
     else loggerInfo('to run bom like see readme.md');
     loggerSuccess(`${appName} task success`);
   } catch (error) {

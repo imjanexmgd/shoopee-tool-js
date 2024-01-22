@@ -1,9 +1,9 @@
 import inquirer from 'inquirer';
-import shopeeLveClient from '../session/shopeeLveClient.js';
-import loginInfo from './loginInfo.js';
-import { loggerFailed, loggerInfo, loggerSuccess } from '../utils/logger.js';
-import terminalClear from '../utils/terminalClear.js';
-import delay from '../utils/delay.js';
+import shopeeLveClient from '../../session/shopeeLveClient.js';
+import loginInfo from '../loginInfo.js';
+import { loggerFailed, loggerInfo, loggerSuccess } from '../../utils/logger.js';
+import terminalClear from '../../utils/terminalClear.js';
+import delay from '../../utils/delay.js';
 const unlikeProduct = async (item) => {
   try {
     const { name, itemid, shopid } = item;
