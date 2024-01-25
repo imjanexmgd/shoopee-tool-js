@@ -8,6 +8,7 @@ import { loggerFailed, loggerInfo, loggerSuccess } from '../../utils/logger.js';
 import terminalClear from '../../utils/terminalClear.js';
 import shopeeLveClient from '../../session/shopeeLveClient.js';
 import loginInfo from '../loginInfo.js';
+
 const likeProduct = async ({ name, itemid, shopid }) => {
   try {
     const url = 'https://shopee.co.id/api/v4/pages/like_items'; // unlike_items
@@ -44,11 +45,23 @@ const extractShortUrl = async (shortUrl) => {
 };
 const processShortenShoopeLink = async (shortenUrl, current, length) => {
   try {
+    console.log('process shorten shopee link');
     const fullUrl = await extractShortUrl(shortenUrl);
     const itemId = fullUrl.split('/')[5];
     const shopId = fullUrl.split('/')[4];
     let detailProduct;
-    const r = await axios.get(fullUrl);
+    const r = await axios.get(fullUrl, {
+      headers: {
+        'User-Agent':
+          'Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0',
+        Accept: 'application/json, text/plain, */*',
+        'Accept-Language': 'en-US,en;q=0.5',
+        'Affiliate-Program-Type': '1',
+        'Sec-Fetch-Dest': 'empty',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Site': 'same-origin',
+      },
+    });
     const $ = cheerio.load(r.data);
 
     $('script[type="application/ld+json"]').each((index, element) => {
@@ -73,7 +86,49 @@ const processShortenShoopeLink = async (shortenUrl, current, length) => {
     throw error;
   }
 };
-
+const processShopeeLinkFrompc = async (url, current, length) => {
+  try {
+    loggerInfo('process shopee link from pc');
+    const parsingUrl = url.split('?')[0].split('/')[3].split('.');
+    const shopId = parsingUrl[parsingUrl.length - 2];
+    const itemId = parsingUrl[parsingUrl.length - 1];
+    const fixedUrl = `https://shopee.co.id/product/${shopId}/${itemId}`;
+    const r = await axios.get(fixedUrl, {
+      headers: {
+        'User-Agent':
+          'Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0',
+        Accept: 'application/json, text/plain, */*',
+        'Accept-Language': 'en-US,en;q=0.5',
+        'Affiliate-Program-Type': '1',
+        'Sec-Fetch-Dest': 'empty',
+        'Sec-Fetch-Mode': 'cors',
+        'Sec-Fetch-Site': 'same-origin',
+      },
+    });
+    const $ = cheerio.load(r.data);
+    let detailProduct;
+    $('script[type="application/ld+json"]').each((index, element) => {
+      const script = $(element).text();
+      const data = JSON.parse(script);
+      if (data['@type'] === 'Product') {
+        detailProduct = data;
+      }
+    });
+    if (detailProduct == null || detailProduct == undefined) {
+      throw Error('Failed get product');
+    }
+    const product = {
+      name: detailProduct.name,
+      itemid: parseInt(itemId),
+      shopid: parseInt(shopId),
+    };
+    await likeProduct(product);
+    loggerInfo(`Progress ${parseInt(current) + 1} || ${parseInt(length)}`);
+    await delay(150);
+  } catch (error) {
+    throw error;
+  }
+};
 const addFavoritebyList = async () => {
   try {
     terminalClear();
@@ -84,6 +139,8 @@ const addFavoritebyList = async () => {
     );
     console.log();
     const shortLinkRegex = /https:\/\/shope\.ee\/[a-zA-Z0-9]+/;
+    const shopeeLinkPcRegex =
+      /https:\/\/shopee\.co\.id\/.+-\d+\.+\d+\?.+&xptdk=.{32}&fbclid=.{32}/;
     const { filename } = await inquirer.prompt({
       name: 'filename',
       type: 'input',
@@ -103,6 +160,10 @@ const addFavoritebyList = async () => {
       if (isShortLink) {
         loggerInfo('Shorten Url : ' + listLink[key]);
         await processShortenShoopeLink(listLink[key], key, listLink.length);
+      } else if (shopeeLinkPcRegex) {
+        loggerInfo('Link from pc detected');
+        // console.log('bong');
+        await processShopeeLinkFrompc(listLink[key], key, listLink.length);
       } else {
         loggerFailed(
           'Failed give link because link not supported ' + listLink[key]
