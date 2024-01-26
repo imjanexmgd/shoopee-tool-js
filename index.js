@@ -9,6 +9,7 @@ import { loggerFailed, loggerInfo, loggerSuccess } from './src/utils/logger.js';
 import getLivechat from './src/core/liveTools/getLiveChat.js';
 import bomLike from './src/core/boost/bomLike.js';
 import addFavoritebyList from './src/core/favorite/addFavByList.js';
+import addBanWord from './addBanWord.js';
 
 (async () => {
   try {
@@ -21,10 +22,10 @@ import addFavoritebyList from './src/core/favorite/addFavByList.js';
     );
     const choices = [
       'get cookie',
-
       'add favorite',
       'add favorite by list',
       'batch unlike',
+      'add ban word',
       'spam like live',
       'spam share live',
       'monitor live chat',
@@ -46,6 +47,7 @@ import addFavoritebyList from './src/core/favorite/addFavByList.js';
     else if (choice === 'batch unlike') await BatchUnLike();
     else if (choice === 'monitor live chat') await getLivechat();
     else if (choice === 'spam like live') await bomLike();
+    else if (choice === 'add ban word') await addBanWord();
     else loggerInfo('to run bom like see readme.md');
     loggerSuccess(`${appName} task success`);
   } catch (error) {
