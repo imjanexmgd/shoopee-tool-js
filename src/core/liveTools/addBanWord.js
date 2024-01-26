@@ -1,9 +1,9 @@
-import shopeeLveClient from './src/session/shopeeLveClient.js';
+import shopeeLveClient from '../../session/shopeeLveClient.js';
 import fs from 'node:fs';
 import path from 'node:path';
-import { loggerFailed, loggerSuccess } from './src/utils/logger.js';
+import { loggerFailed, loggerSuccess } from '../../utils/logger.js';
 import inquirer from 'inquirer';
-import terminalClear from './src/utils/terminalClear.js';
+import terminalClear from '../../utils/terminalClear.js';
 
 const addBanWord = async () => {
   try {

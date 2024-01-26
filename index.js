@@ -9,10 +9,12 @@ import { loggerFailed, loggerInfo, loggerSuccess } from './src/utils/logger.js';
 import getLivechat from './src/core/liveTools/getLiveChat.js';
 import bomLike from './src/core/boost/bomLike.js';
 import addFavoritebyList from './src/core/favorite/addFavByList.js';
-import addBanWord from './addBanWord.js';
-
+import addBanWord from './src/core/liveTools/addBanWord.js';
+import dotenv from 'dotenv';
 (async () => {
   try {
+    dotenv.config();
+    // return;
     terminalClear();
     const json = await readFile('./package.json');
     const jsonData = JSON.parse(json);

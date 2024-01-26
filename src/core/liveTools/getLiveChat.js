@@ -9,10 +9,11 @@ import delay from '../../utils/delay.js';
 import terminalClear from '../../utils/terminalClear.js';
 import { loggerFailed, loggerSuccess } from '../../utils/logger.js';
 import androidClient from '../../session/androidClient.js';
+import sendNotifTele from '../../../BotTele.js';
 
 const keyword = () => {
   try {
-    const filePath = path.join(process.cwd(), 'keywordList.txt');
+    const filePath = path.join(process.cwd(), 'list', 'keywordBan.txt');
     const data = readFileSync(filePath, 'utf-8');
     const keywords = data
       .split('\n')
@@ -47,6 +48,25 @@ const loggerChat = (timestamp, msg) => {
     );
     const formattedMsg = `${chalk.bold(user)} : ${chalk.italic(content)}`;
     console.log(`[${timeString}] : ${formattedMsg}`);
+  } catch (error) {
+    console.log(error + 'failed logger');
+  }
+};
+const notifTele = async (timestamp, msg) => {
+  try {
+    const { user, content, userid } = msg;
+    const date = new Date(timestamp);
+    const timeString = date.toLocaleTimeString('en-US', {
+      hour12: false,
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      timeZone: 'Asia/Jakarta',
+    });
+    const formattedMsg = `${user} : ${content}`;
+    const msgTele = `[${timeString}] : ${formattedMsg}`;
+    await sendNotifTele(msgTele);
+    await delay(2500);
   } catch (error) {
     console.log(error + 'failed logger');
   }
@@ -90,6 +110,7 @@ const getLivechat = async () => {
             const content = contentJson.content;
             const msg = { user, content, userid };
             loggerChat(messageBlock.timestamp, msg);
+            await notifTele(messageBlock.timestamp, msg);
             const doFilter = filterMessages(content, keywordList);
 
             // contain keyword
@@ -101,6 +122,7 @@ const getLivechat = async () => {
               loggerSuccess('not contained warn message');
               console.log();
             }
+            await delay(100);
           }
         }
         timestamp = largestTimestamp;
@@ -109,7 +131,7 @@ const getLivechat = async () => {
           loggerFailed('Live session has ended');
           break;
         }
-        await delay(2500);
+        await delay(15000);
         console.log();
       } else {
         loggerFailed('failed to get live session info');
