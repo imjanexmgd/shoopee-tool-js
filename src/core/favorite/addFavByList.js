@@ -47,8 +47,8 @@ const processShortenShoopeLink = async (shortenUrl, current, length) => {
   try {
     console.log('process shorten shopee link');
     const fullUrl = await extractShortUrl(shortenUrl);
-    const itemId = fullUrl.split('/')[5];
-    const shopId = fullUrl.split('/')[4];
+    const itemId = fullUrl.split('/').slice(-1)[0];
+    const shopId = fullUrl.split('/').slice(-2, -1)[0];
     let detailProduct;
     const r = await axios.get(fullUrl, {
       headers: {
@@ -90,8 +90,8 @@ const processShopeeLinkFrompc = async (url, current, length) => {
   try {
     loggerInfo('process shopee link from pc');
     const parsingUrl = url.split('?')[0].split('/')[3].split('.');
-    const shopId = parsingUrl[parsingUrl.length - 2];
-    const itemId = parsingUrl[parsingUrl.length - 1];
+    const itemId = parsingUrl.slice(-1)[0];
+    const shopId = parsingUrl.slice(-2, -1)[0];
     const fixedUrl = `https://shopee.co.id/product/${shopId}/${itemId}`;
     const r = await axios.get(fixedUrl, {
       headers: {
