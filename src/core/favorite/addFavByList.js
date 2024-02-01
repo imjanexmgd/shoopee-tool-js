@@ -9,7 +9,7 @@ import terminalClear from '../../utils/terminalClear.js';
 import shopeeLveClient from '../../session/shopeeLveClient.js';
 import loginInfo from '../loginInfo.js';
 
-const likeProduct = async ({ name, itemid, shopid }) => {
+const likeProduct = async ({ itemid, shopid }) => {
   try {
     const url = 'https://shopee.co.id/api/v4/pages/like_items'; // unlike_items
     const data = {
@@ -22,7 +22,7 @@ const likeProduct = async ({ name, itemid, shopid }) => {
     };
     const req = await shopeeLveClient.post(url, data);
     if (req.data.error == 0) {
-      loggerSuccess(`Success like ${name}`);
+      loggerSuccess(`Success like product with id ${itemid}`);
     } else {
       loggerFailed(`Failed when give like`);
     }
@@ -49,33 +49,7 @@ const processShortenShoopeLink = async (shortenUrl, current, length) => {
     const fullUrl = await extractShortUrl(shortenUrl);
     const itemId = fullUrl.split('/').slice(-1)[0];
     const shopId = fullUrl.split('/').slice(-2, -1)[0];
-    let detailProduct;
-    const r = await axios.get(fullUrl, {
-      headers: {
-        'User-Agent':
-          'Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0',
-        Accept: 'application/json, text/plain, */*',
-        'Accept-Language': 'en-US,en;q=0.5',
-        'Affiliate-Program-Type': '1',
-        'Sec-Fetch-Dest': 'empty',
-        'Sec-Fetch-Mode': 'cors',
-        'Sec-Fetch-Site': 'same-origin',
-      },
-    });
-    const $ = cheerio.load(r.data);
-
-    $('script[type="application/ld+json"]').each((index, element) => {
-      const script = $(element).text();
-      const data = JSON.parse(script);
-      if (data['@type'] === 'Product') {
-        detailProduct = data;
-      }
-    });
-    if (detailProduct == null || detailProduct == undefined) {
-      throw Error('Failed get product');
-    }
     const product = {
-      name: detailProduct.name,
       itemid: parseInt(itemId),
       shopid: parseInt(shopId),
     };
@@ -92,33 +66,8 @@ const processShopeeLinkFrompc = async (url, current, length) => {
     const parsingUrl = url.split('?')[0].split('/')[3].split('.');
     const itemId = parsingUrl.slice(-1)[0];
     const shopId = parsingUrl.slice(-2, -1)[0];
-    const fixedUrl = `https://shopee.co.id/product/${shopId}/${itemId}`;
-    const r = await axios.get(fixedUrl, {
-      headers: {
-        'User-Agent':
-          'Mozilla/5.0 (X11; Linux x86_64; rv:109.0) Gecko/20100101 Firefox/115.0',
-        Accept: 'application/json, text/plain, */*',
-        'Accept-Language': 'en-US,en;q=0.5',
-        'Affiliate-Program-Type': '1',
-        'Sec-Fetch-Dest': 'empty',
-        'Sec-Fetch-Mode': 'cors',
-        'Sec-Fetch-Site': 'same-origin',
-      },
-    });
-    const $ = cheerio.load(r.data);
-    let detailProduct;
-    $('script[type="application/ld+json"]').each((index, element) => {
-      const script = $(element).text();
-      const data = JSON.parse(script);
-      if (data['@type'] === 'Product') {
-        detailProduct = data;
-      }
-    });
-    if (detailProduct == null || detailProduct == undefined) {
-      throw Error('Failed get product');
-    }
+    // const fixedUrl = `https://shopee.co.id/product/${shopId}/${itemId}`;
     const product = {
-      name: detailProduct.name,
       itemid: parseInt(itemId),
       shopid: parseInt(shopId),
     };
@@ -175,4 +124,5 @@ const addFavoritebyList = async () => {
     console.log(error);
   }
 };
+// addFavoritebyList();
 export default addFavoritebyList;
