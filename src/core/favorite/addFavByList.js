@@ -1,5 +1,4 @@
 import axios from 'axios';
-import * as cheerio from 'cheerio';
 import inquirer from 'inquirer';
 import fs from 'node:fs';
 import delay from '../../utils/delay.js';
