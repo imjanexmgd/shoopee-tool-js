@@ -28,7 +28,7 @@ const unlikeProduct = async (item) => {
     console.log(`error when like product :${error.message}`);
   }
 };
-const getMyLikes = async () => {
+const getMyLikesLiveApi = async () => {
   try {
     terminalClear();
     let offset = 0;
@@ -76,6 +76,53 @@ const getMyLikes = async () => {
     console.log(error);
   }
 };
+const getMyLikesDefApi = async () => {
+  try {
+    const myLikes = [];
+    terminalClear();
+    let cursor = 0;
+    while (true) {
+      loggerInfo('Starting fetching liked at cursor ' + cursor);
+      const response = await shopeeLveClient.get(
+        'https://shopee.co.id/api/v4/pages/get_liked_items',
+        {
+          params: {
+            category_ids: '',
+            cursor: cursor,
+            keyword: '',
+            limit: '100',
+            offset: '0',
+            status: '0',
+          },
+        }
+      );
+      if (response.data.error != 0) {
+        loggerFailed('Failed when fetch liked product');
+        throw Error('Shopee give error code ' + response.data.error);
+      }
+      const { items } = response.data.data;
+
+      items.forEach((item) => {
+        const { itemid, shopid, name } = item;
+        const product = {
+          name: name,
+          itemid: parseInt(itemid),
+          shopid: parseInt(shopid),
+        };
+        myLikes.push(product);
+      });
+      loggerSuccess('Total product liked ' + myLikes.length + ' items');
+      if (response.data.data.paging.nomore == true) {
+        loggerInfo('no more liked item process stopped');
+        break;
+      }
+      cursor = response.data.data.paging.cursor;
+    }
+    return myLikes;
+  } catch (error) {
+    console.log(error);
+  }
+};
 const BatchUnLike = async () => {
   try {
     terminalClear();
@@ -87,7 +134,7 @@ const BatchUnLike = async () => {
       message: 'do you want filter by commition rate ?',
     });
     if (isFilterComm == true) {
-      const myLikes = await getMyLikes();
+      const myLikes = await getMyLikesLiveApi();
       const { commRate } = await inquirer.prompt({
         name: 'commRate',
         type: 'input',
@@ -110,7 +157,7 @@ const BatchUnLike = async () => {
         }
       }
     } else {
-      const myLikes = await getMyLikes();
+      const myLikes = await getMyLikesDefApi();
       for (const item of myLikes) {
         await unlikeProduct(item);
       }
